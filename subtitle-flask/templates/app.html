@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subtitle Finder</title>
+    <script>
+        function startTask() {
+            // 显示加载圆圈
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('video_begin').style.display = 'none';
+            document.getElementById('result').innerText = '视频字幕提取中...'; // 清空之前的结果
+            // 使用fetch发送请求到Flask后端
+            fetch('/subtitle_finder_go')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 处理完成后隐藏加载圆圈并显示结果
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '';
+                    document.getElementById('video_begin').style.display = 'block';
+                    alert('字幕提取完成!')                 
+                })
+                
+                .catch(error => {
+                    // 处理请求错误
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '发生错误：' + error.message;
+                });
+        };
+        // window.onload = startTask;
+    </script>
+
+    <script>
+        function startRemove() {
+            // 显示加载圆圈
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('video_begin').style.display = 'none';
+            document.getElementById('result').innerText = '视频字幕去除中...'; // 清空之前的结果
+            // 使用fetch发送请求到Flask后端
+            fetch('/subtitle_remover')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 处理完成后隐藏加载圆圈并显示结果
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '';
+                    document.getElementById('video_begin').style.display = 'block';
+                    alert('字幕去除完成!')                 
+                })
+                
+                .catch(error => {
+                    // 处理请求错误
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '发生错误：' + error.message;
+                });
+        };
+        // window.onload = startTask;
+    </script>
+    <script>
+        function startTranslate() {
+            // 显示加载圆圈
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('video_begin').style.display = 'none';
+            document.getElementById('result').innerText = '字幕翻译中...'; // 清空之前的结果
+            // 使用fetch发送请求到Flask后端
+            fetch('/subtitle_translation')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 处理完成后隐藏加载圆圈并显示结果
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '';
+                    document.getElementById('video_begin').style.display = 'block';
+                    alert('字幕翻译完成!')                 
+                })
+                
+                .catch(error => {
+                    // 处理请求错误
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '发生错误：' + error.message;
+                });
+        };
+        // window.onload = startTask;
+    </script>
+    <script>
+        function startCombine() {
+            // 显示加载圆圈
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('video_begin').style.display = 'none';
+            document.getElementById('result').innerText = '视频字幕去除中...'; // 清空之前的结果
+            // 使用fetch发送请求到Flask后端
+            fetch('/subtitle_combine')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 处理完成后隐藏加载圆圈并显示结果
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '';
+                    document.getElementById('video_begin').style.display = 'block';
+                    alert('字幕去除完成!')                 
+                })
+                
+                .catch(error => {
+                    // 处理请求错误
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('result').innerText = '发生错误：' + error.message;
+                });
+        };
+        // window.onload = startTask;
+    </script>
+
+
+    <!-- <script>
+        function show_floder_fun() {
+            document.getElementById('show_floder').style.display = 'none';
+        };
+        window.onload = startTask;
+    </script> -->
+    <style>
+        /* body{
+            background-color: #f3f3f3;
+        } */
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            margin: 50px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .container_floder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* height: 100vh; */
+                }
+        .container_content {
+            display: flex; /* 使用flex布局来并排显示图像 */
+            justify-content: space-around; /* 图像之间均匀分布 */
+            align-items: center; /* 垂直居中图像（如果框的高度足够大） */
+            background-color: #f0f0f0; /*灰色背景 */
+            margin: 20px; /* 外边距 */
+            width: 70%; /* 容器宽度 */
+            margin-left: auto; /* 水平居中 */
+            margin-right: auto;
+            border-radius: 10px; /* 圆角 */
+        }
+        .container.div-container{
+            max-width: 40%; /* 限制图像的最大宽度 */
+            height: auto; /* 保持图像的原始宽高比 */
+            border-radius: 5px; /* 圆角 */
+        }
+
+        .upload{
+            /* background-color: rgb(14, 49, 245); */
+            font-size:12px;
+            
+            /* border-color: rgb(14, 49, 245); */
+        }
+        .container_button {
+            display: flex; /* 使用flex布局来并排显示图像 */
+            justify-content: space-around; /* 图像之间均匀分布 */
+            align-items: center; /* 垂直居中图像（如果框的高度足够大） */
+            width: 70%; /* 容器宽度 */
+            margin-left: auto; /* 水平居中 */
+            margin-right: auto;
+            border-radius: 25px; /* 圆角 */
+        }
+        .btn-image {
+            background-size: cover; /* 覆盖整个按钮 */
+            background-position: center; /* 图片居中 */
+            border: none; /* 移除边框 */
+            color: white; /* 文字颜色（如果需要的话） */
+            cursor: pointer; /* 鼠标悬停时显示指针 */
+            padding: 40px 80px; /* 内边距 */
+            font-size: 18px; /* 字体大小 */
+            border-radius: 5px; /* 边框圆角 */
+            /* 根据需要添加更多样式 */
+        }
+        .btn2-image {
+            background-size: cover; /* 覆盖整个按钮 */
+            border: none; /* 移除边框 */
+            color: white; /* 文字颜色（如果需要的话） */
+            cursor: pointer; /* 鼠标悬停时显示指针 */
+            padding: 50px 85px; /* 内边距 */
+            font-size: 18px; /* 字体大小 */
+            border-radius: 5px; /* 边框圆角 */
+            /* 根据需要添加更多样式 */
+        }
+        #Extract{
+            background-image: url('/static/images/GEM4.png'); /* 指向你的背景图片 */
+        }
+        #Remove{
+            background-image: url('/static/images/GEM5.png'); /* 指向你的背景图片 */
+        }
+        #Translate{
+            background-image: url('/static/images/GEM6.png'); /* 指向你的背景图片 */
+        }
+        #Combine{
+            background-image: url('/static/images/GEM.png'); /* 指向你的背景图片 */
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .container_get {
+            display: flex; /* 使用flex布局来并排显示图像 */
+            justify-content: space-around; /* 图像之间均匀分布 */
+            align-items: center; /* 垂直居中图像（如果框的高度足够大） */
+            width: 70%; /* 容器宽度 */
+            border-radius: 25px; /* 圆角 */
+            margin-left: auto; /* 水平居中 */
+            margin-right: auto;
+        }
+        #get_chinese{
+            background-image: url('/static/images/GEM_b1.png'); /* 指向你的背景图片 */
+        }
+        #get_english{
+            background-image: url('/static/images/GEM_b2.png'); /* 指向你的背景图片 */
+        }
+        #get_videos{
+            background-image: url('/static/images/GEM_b3.png'); /* 指向你的背景图片 */
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container_content" class="container_content">
+        <div class="div-container">
+            <br/>
+            <video  id="video_begin" autoplay muted playsinline>
+                <source src="{{ url_for('static', filename='videos/GEM3.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div  id="result"></div>
+            <div id="loader" class="loader"></div>          
+        </div>
+        <div class="div-container">
+            <div> <input class="upload" type="file" id="folderInput"  webkitdirectory directory /> </div><br/>
+            <div> <button class="upload" id="folderdownload" onclick="uploadFiles()">Upload</button> </div>
+        </div>
+    </div>
+    <div class="container_button">
+        <button class="btn-image" onclick="startTask()" id="Extract">字幕提取</button>
+        <button class="btn-image" onclick="startRemove()" id="Remove">字幕去除</button>
+        <button class="btn-image" onclick="startTranslate()" id="Translate">字幕翻译</button>
+        <button class="btn-image" onclick="startCombine()" id="Combine">英文字幕视频</button>
+    </div><br/>
+    <div class="container_get">
+        <!-- <button class="btn2-image" onclick="alter_chinese()" id="get_chinese"> 查看修改中文字幕 </button> -->
+        <form action="/show_list">
+            <button class="btn2-image" id="get_chinese">查看修改中文字幕</button>
+        </form>
+        <form action="/show_translation">
+            <button class="btn2-image" id="get_english">查看修改英文字幕</button>
+        </form>
+        <form method="get" action="/videos_download">
+            <button class="btn2-image" type="submit" id="get_videos">下载英文字幕视频</button>
+        </form>
+        <!-- <button class="btn-image" onclick="startDownload()" id="get_videos">下载英文字幕视频</button> -->
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function uploadFiles() {
+            var folderInput = $('#folderInput')[0];
+            var folderName = folderInput.webkitRelativePath || folderInput.mozRelativePath || '';
+            // 尝试获取文件夹名称，但注意这取决于浏览器支持和文件系统的结构
+            // 在某些情况下，这可能会返回完整的文件路径，或者根本不支持
+
+            // 清除路径中的文件部分，只保留文件夹名称（如果有的话）
+            var folderNameOnly = folderName.split('/').pop() || 'unknown_folder';
+
+            var files = folderInput.files;
+            // var files = $('#folderInput')[0].files;
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+            $.ajax({
+                url: '/upload_folder',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    alert('上传成功！')
+                    console.log(response);
+                },
+                xhr: function() {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                var percentComplete = (e.loaded / e.total) * 100;
+                                console.log(percentComplete.toFixed(2) + '%');
+                            }
+                        }, false);
+                    }
+                    return myXhr;
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+</html>
+

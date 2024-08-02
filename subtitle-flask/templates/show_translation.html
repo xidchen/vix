@@ -1,0 +1,64 @@
+<!-- #web显示文件夹下的所有文件 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>中文文件列表</title>
+    <style>
+        .container {
+            display: flex; /* 使用flex布局来并排显示图像 */
+            justify-content: space-around; /* 图像之间均匀分布 */
+            margin: 20px; /* 外边距 */
+            width: 90%; /* 容器宽度 */
+            margin-left: auto; /* 水平居中 */
+            margin-right: auto;
+        }
+        .container_text {
+            display: flex;
+            justify-content: center;
+            /* align-items: center; */
+            align-items: flex-end;
+            width: 70%; /* 容器宽度 */
+            margin-right: auto;
+            margin-left: auto; /* 水平居中 */
+            /* height: 100vh; */
+                }
+        .save {
+            display: flex;
+            width: 70%; /* 容器宽度 */
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h5>英文字幕文件：</h1>
+            <ul>
+                {% for file in files %}
+                <li><a href="{{ url_for('file_clicked_translation', filename=file) }}">{{ file }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="container_text">
+            <form>
+                <h3>{{select_file}}中文文件</h3> 
+                <textarea name="file_content" rows="40" cols="60">{{ file_content_ch }}</textarea><br>
+                <input style="border: none;">
+            </form>
+        </div>   
+        <div class="container_text">
+            <form  action="{{ url_for('edit_file_translation') }}" method="post">
+                <h3>{{select_file}}英文文件</h3> 
+                <textarea name="file_content" rows="40" cols="60">{{ file_content }}</textarea><br>
+                <input class="save" style="margin-left: auto;" type="submit" value="保存">
+            </form>
+        </div>   
+
+    </div>
+
+    <form action="/Return_index">
+        <button >返回</button>
+    </form>
+
+</body>
+</html>
