@@ -32,7 +32,7 @@ class SubtitleDetector:
         end_t,
         det_time=1,
         set_dettime=False,
-        max_devloc=50,
+        # max_devloc=0,
         print_res=False,
         print_time=False,
         print_selectres=False,
@@ -45,15 +45,15 @@ class SubtitleDetector:
         self.end_t = end_t
         self.det_time = det_time
         self.set_dettime = set_dettime
-        self.max_devloc = max_devloc
+        self.height = 0
+        self.width = 0
+
         self.print_res = print_res
         self.print_time = print_time
         self.print_selectres = print_selectres
         self.print_totaloutlist = print_totaloutlist
         self.use_deltime = use_deltime
         self.print_delrepeatoutlist = print_delrepeatoutlist
-        self.height = 0
-        self.width = 0
         self.select_down = True
 
     def del_repeat(self, det_list):
@@ -97,6 +97,7 @@ class SubtitleDetector:
             ret, frame = cap.read()
             if self.height == 0:
                 self.height, self.width = frame.shape[:2]
+                self.max_devloc = 0.06*self.height
                 print(self.height, self.width)
             
             if self.begin_t == None and self.end_t == None:
@@ -119,8 +120,11 @@ class SubtitleDetector:
                 timestamp >= self.begin_t
                 and timestamp <= self.end_t
                 and timestamp % self.det_time == 0
-            ):  # timestamp >= begin_t and  timestamp<= end_t and
-                result = reader.readtext(frame)
+            ):  
+                result,_ = reader.detect(frame)
+                result = result[0]
+                # print(result)
+                out_list = []
                 last_text = (len(result) != 0) #有内容为True
                 # 获取当前帧的时间戳（单位为秒）
                 if self.print_time:
@@ -128,23 +132,19 @@ class SubtitleDetector:
                 if self.print_res:
                     print(RED_FONT + "result" + END)
                     print(result)
-                out_list = []
                 if len(result) != 0:
                     result = result[::-1]
-                    result_out = []
-                    for i in range(len(result)):
-                        if "int" in str(type(result[i][0][0][0])):
-                            result_out = result[i]
-                            break
+                    if len(result)>1 and max([abs(result[0][i+2] - result[1][i+2]) for i in range(2)]) < self.max_devloc:
+                       result[0][2] = min(result[0][2], result[1][2])
+                       result[0][3] = max(result[0][3], result[1][3])
+                       result[0][0] = min(result[0][0], result[1][0])
+                       result[0][1] = max(result[0][1], result[1][1])   
                     if self.print_selectres:
                         print(RED_FONT + "result_out" + END)
-                        print(result_out)
-                    if len(result_out) != 0:  # (y1, x2, y2, x2)
-                        out_list.append(result_out[0][0][1])
-                        out_list.append(result_out[0][2][1])
-                        out_list.append(result_out[0][0][0])
-                        out_list.append(result_out[0][2][0])
-                        out_list = [int(i) for i in out_list]
+                        print(result)
+                    out_list=[result[0][2],result[0][3],result[0][0],result[0][1]]
+                    
+                    out_list = [max(0,int(i)) for i in out_list]
                 if (
                     len(out_list) != 0
                     and len(det_list) != 0

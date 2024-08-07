@@ -44,7 +44,7 @@ def google_translate(source_lang: str, target_lang: str, text: str) -> str:
         return cfg.translate_error
 
 
-def translate_srt_files(path,input_lang=cfg.input_lang, output_lang=cfg.output_lang) -> None:
+def translate_srt_files(path,input_lang=None, output_lang=None) -> None:
     input_dir = os.path.join(path,cfg.input_dir)
     output_dir = os.path.join(path,cfg.output_dir)
     if not os.path.exists(input_dir):
@@ -53,7 +53,6 @@ def translate_srt_files(path,input_lang=cfg.input_lang, output_lang=cfg.output_l
     if not os.path.exists(output_dir):
         print(f"Create output directory {output_dir}.")
         os.makedirs(output_dir)
-
     for dirpath, _, filenames in os.walk(input_dir):
         for filename in filenames:
             if filename.endswith(cfg.input_srt_suffix):
@@ -74,19 +73,19 @@ def translate_srt_files(path,input_lang=cfg.input_lang, output_lang=cfg.output_l
                         )
                         texts_in_output_lang = []
                         source_lang = input_lang
-                        for target_lang in output_lang:
-                            text_in_target_lang = google_translate(
-                                source_lang=source_lang,
-                                target_lang=target_lang,
-                                text=text_in_input_lang
-                            )
-                            if text_in_target_lang == cfg.translate_error:
-                                sys.exit(1)
-                            texts_in_target_lang = text_in_target_lang.split('\n')
-                            texts_in_target_lang = [
-                                t[0].upper() + t[1:] for t in texts_in_target_lang
-                            ]
-                            texts_in_output_lang.append(texts_in_target_lang)
+                        # for target_lang in output_lang:
+                        text_in_target_lang = google_translate(
+                            source_lang=source_lang,
+                            target_lang=output_lang,
+                            text=text_in_input_lang
+                        )
+                        if text_in_target_lang == cfg.translate_error:
+                            sys.exit(1)
+                        texts_in_target_lang = text_in_target_lang.split('\n')
+                        texts_in_target_lang = [
+                            t[0].upper() + t[1:] for t in texts_in_target_lang
+                        ]
+                        texts_in_output_lang.append(texts_in_target_lang)
                         for i, line in enumerate(lines):
                             if i % 4 in {0, 1}:
                                 f_out.write(line)
@@ -101,5 +100,5 @@ def translate_srt_files(path,input_lang=cfg.input_lang, output_lang=cfg.output_l
                 print(f"{input_file_path} -> {output_file_path}")
 
 
-if __name__ == "__main__":
-    translate_srt_files(cfg.input_lang, cfg.output_lang)
+# if __name__ == "__main__":
+#     translate_srt_files(cfg.input_lang, cfg.output_lang)
